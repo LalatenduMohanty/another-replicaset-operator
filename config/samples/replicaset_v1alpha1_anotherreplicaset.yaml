@@ -1,0 +1,7 @@
+apiVersion: replicaset.my.domain/v1alpha1
+kind: AnotherReplicaSet
+metadata:
+  name: anotherreplicaset-sample
+spec:
+  # Add fields here
+  foo: bar
