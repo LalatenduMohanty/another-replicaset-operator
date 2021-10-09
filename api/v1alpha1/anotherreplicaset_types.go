@@ -28,14 +28,19 @@ type AnotherReplicaSetSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
-	// Foo is an example field of AnotherReplicaSet. Edit anotherreplicaset_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
+	// Replicas is number of pods we want the controller to run at the same time
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Minimum=1
+	Replicas int32 `json:"replicas"`
 }
 
 // AnotherReplicaSetStatus defines the observed state of AnotherReplicaSet
 type AnotherReplicaSetStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
+
+	// +kubebuilder:validation:Optional
+	AvailableReplicas int32 `json:"availableReplicas"`
 }
 
 //+kubebuilder:object:root=true
