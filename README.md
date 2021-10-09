@@ -13,3 +13,17 @@ $ kubebuilder init --domain my.domain
 $ kubebuilder create api --group replicaset --version v1alpha1 --kind AnotherReplicaSet
 
 ```
+
+### Steps to run the operator
+
+* Before running the operator , check if the api group already exists
+```
+$  kubectl api-resources --api-group=replicaset.my.domain
+```
+* make install
+
+```
+$ kubectl api-resources --api-group=replicaset.my.domain
+NAME                 SHORTNAMES   APIVERSION                      NAMESPACED   KIND
+anotherreplicasets                replicaset.my.domain/v1alpha1   true         AnotherReplicaSet
+```
