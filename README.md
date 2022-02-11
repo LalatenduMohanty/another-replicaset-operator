@@ -1,5 +1,6 @@
 # Another ReplicaSet Controller/Operator
 
+The objective is to implement a replicaset controller similar to [Kube replicaset controller](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/) using [kubebuilder](https://book.kubebuilder.io/quick-start.html) from scratch. The process of implementating a controller will help the developer better understanding the challenges and understanding of how Kubernetes controllers work.
 
 ## Commands to generate this project
 
