@@ -1,8 +1,8 @@
 # Another ReplicaSet Controller/Operator
 
-The objective is to implement a replicaset controller similar to [Kube replicaset controller](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/) using [kubebuilder](https://book.kubebuilder.io/quick-start.html) from scratch. The process of implementating a controller will help the developer better understanding the challenges and understanding of how Kubernetes controllers work.
+The objective is to implement a replicaset controller similar to [Kube replicaset controller](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/) using [kubebuilder quick start](https://book.kubebuilder.io/quick-start.html). The process of implementating a controller will help the developer better understanding the challenges and understanding of how Kubernetes controllers work.
 
-## Commands to generate this project
+## Steps to generate this project
 
 ```
 $ go mod init another-replicaset-operator
@@ -28,3 +28,6 @@ $ kubectl api-resources --api-group=replicaset.my.domain
 NAME                 SHORTNAMES   APIVERSION                      NAMESPACED   KIND
 anotherreplicasets                replicaset.my.domain/v1alpha1   true         AnotherReplicaSet
 ```
+## Other Examples
+
+* https://github.com/hrishin/podset-operator
