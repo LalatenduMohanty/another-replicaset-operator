@@ -31,3 +31,4 @@ anotherreplicasets                replicaset.my.domain/v1alpha1   true         A
 ## Other Examples
 
 * https://github.com/hrishin/podset-operator
+* https://github.com/kubernetes/sample-controller
