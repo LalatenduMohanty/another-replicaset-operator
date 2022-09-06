@@ -31,8 +31,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	replicasetv1alpha1 "another-replicaset-operator/api/v1alpha1"
-	"another-replicaset-operator/controllers"
+	replicasetv1alpha1 "github.com/LalatenduMohanty/another-replicaset-operator/api/v1alpha1"
+	"github.com/LalatenduMohanty/another-replicaset-operator/controllers"
 	//+kubebuilder:scaffold:imports
 )
 

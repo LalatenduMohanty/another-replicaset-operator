@@ -30,7 +30,7 @@ import (
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	replicasetv1alpha1 "another-replicaset-operator/api/v1alpha1"
+	replicasetv1alpha1 "github.com/LalatenduMohanty/another-replicaset-operator/api/v1alpha1"
 	//+kubebuilder:scaffold:imports
 )
 

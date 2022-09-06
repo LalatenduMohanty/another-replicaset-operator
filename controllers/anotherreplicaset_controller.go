@@ -19,13 +19,16 @@ package controllers
 import (
 	"context"
 
+	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	"sigs.k8s.io/controller-runtime/pkg/log"
+	logf "sigs.k8s.io/controller-runtime/pkg/log"
 
-	replicasetv1alpha1 "another-replicaset-operator/api/v1alpha1"
+	replicasetv1alpha1 "github.com/LalatenduMohanty/another-replicaset-operator/api/v1alpha1"
 )
+
+var log = logf.Log.WithName("another_replica_set")
 
 // AnotherReplicaSetReconciler reconciles a AnotherReplicaSet object
 type AnotherReplicaSetReconciler struct {
@@ -47,11 +50,30 @@ type AnotherReplicaSetReconciler struct {
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.8.3/pkg/reconcile
 func (r *AnotherReplicaSetReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	_ = log.FromContext(ctx)
+	reqLogger := logf.Log.WithName("another-replicaset-controller")
+	reqLogger.Info("Reconciling another replicaset controller")
 
-	// your logic here
-
+	// Fetch the another replica set value from the instance
+	instance := &replicasetv1alpha1.AnotherReplicaSet{}
+	err := r.Client.Get(context.TODO(), req.NamespacedName, instance)
+	if err != nil {
+		if errors.IsNotFound(err) {
+			// Request object not found, could have been deleted after reconcile request.
+			// Owned objects are automatically garbage collected. For additional cleanup logic use finalizers.
+			// Return and don't requeue
+			reqLogger.Info("Request object not found")
+			return ctrl.Result{}, nil
+		}
+		// Error reading the object - requeue the request.
+		reqLogger.Info("Error reading the object, requeuing")
+		return ctrl.Result{}, err
+	}
 	return ctrl.Result{}, nil
+
+	// check the value of Replicas in AnotherReplicaSetSpec of the in-cluser resource
+	// get actual pod count from the incluster resource
+	//replicas := instance.Spec.Replicas
+
 }
 
 // SetupWithManager sets up the controller with the Manager.
