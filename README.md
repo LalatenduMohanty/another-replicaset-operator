@@ -15,16 +15,45 @@ $ kubebuilder create api --group replicaset --version v1alpha1 --kind AnotherRep
 
 ```
 
-### Steps to run the operator
+## Steps after changing the API
+
+* If you are editing the API definitions, generate the manifests such as Custom Resources (CRs) or Custom Resource Defintions (CRDs) using
+```
+make manifests
+```
+
+## Steps to run the operator
 
 * Before running the operator , check if the api group already exists
 ```
-$  kubectl api-resources --api-group=replicaset.my.domain
+kubectl api-resources --api-group=replicaset.my.domain
 ```
-* make install
+* Install the CRDs into the cluster:
+```
+make install
+```
+* Run your controller (this will run in the foreground, so switch to a new terminal if you want to leave it running)
 
+```
+make run
+```
+* Check the api-resources (optional)
 ```
 $ kubectl api-resources --api-group=replicaset.my.domain
 NAME                 SHORTNAMES   APIVERSION                      NAMESPACED   KIND
 anotherreplicasets                replicaset.my.domain/v1alpha1   true         AnotherReplicaSet
+```
+## Uninstall CRDs
+
+* To delete your CRDs from the cluster
+
+```
+make uninstall
+```
+
+## Undeploy controller
+
+* Undeploy the controller to the cluster
+```
+make undeploy
 ```
