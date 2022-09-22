@@ -1,0 +1,6 @@
+apiVersion: replicaset.my.domain/v1alpha1
+kind: AnotherReplicaSet
+metadata:
+  name: example-anotherreplicaset
+spec:
+  replicas: 5
