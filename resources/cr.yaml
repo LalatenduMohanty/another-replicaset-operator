@@ -3,4 +3,4 @@ kind: AnotherReplicaSet
 metadata:
   name: example-anotherreplicaset
 spec:
-  replicas: 5
+  replicas: 10

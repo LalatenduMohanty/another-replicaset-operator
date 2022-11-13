@@ -18,6 +18,7 @@ package controllers
 
 import (
 	"context"
+	"fmt"
 
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -51,7 +52,7 @@ type AnotherReplicaSetReconciler struct {
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.8.3/pkg/reconcile
 func (r *AnotherReplicaSetReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	reqLogger := logf.Log.WithName("another-replicaset-controller")
-	reqLogger.Info("Reconciling another replicaset controller")
+	reqLogger.Info("Reconciling another-replicaset controller")
 
 	// Fetch the another replica set value from the instance
 	instance := &replicasetv1alpha1.AnotherReplicaSet{}
@@ -68,12 +69,28 @@ func (r *AnotherReplicaSetReconciler) Reconcile(ctx context.Context, req ctrl.Re
 		reqLogger.Info("Error reading the object, requeuing")
 		return ctrl.Result{}, err
 	}
-	return ctrl.Result{}, nil
+	//return ctrl.Result{}, nil
 
 	// check the value of Replicas in AnotherReplicaSetSpec of the in-cluser resource
-	// get actual pod count from the incluster resource
-	//replicas := instance.Spec.Replicas
+	// get actual pod count from the incluster custom resource
+	replicas := instance.Spec.Replicas
+	reqLogger.Info(fmt.Sprintf("Replica count in the custom resource: %d", replicas))
 
+	//Get actual number of pods
+	reqLogger.Info(fmt.Sprintf("Trying to get the actual pod count"))
+	podList := &replicasetv1alpha1.AnotherReplicaSetList{}
+	err = r.Client.List(ctx, podList)
+	if err != nil {
+		reqLogger.Info("Error reading the object for pod list, requeuing")
+		return ctrl.Result{}, err
+	}
+
+	podCount := 0
+	for i, _ := range podList.Items {
+		podCount = i
+	}
+	reqLogger.Info(fmt.Sprintf("In-cluster POD count : %d", podCount))
+	return ctrl.Result{}, nil
 }
 
 // SetupWithManager sets up the controller with the Manager.

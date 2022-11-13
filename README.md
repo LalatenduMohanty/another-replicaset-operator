@@ -43,6 +43,11 @@ $ kubectl api-resources --api-group=replicaset.my.domain
 NAME                 SHORTNAMES   APIVERSION                      NAMESPACED   KIND
 anotherreplicasets                replicaset.my.domain/v1alpha1   true         AnotherReplicaSet
 ```
+* Apply the custom resource in another terminal which has KUBECONFIG configured for the kube environment
+```
+$ kubectl apply -f resources/cr.yaml
+```
+
 ## Uninstall CRDs
 
 * To delete your CRDs from the cluster
