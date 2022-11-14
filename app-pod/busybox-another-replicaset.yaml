@@ -1,0 +1,24 @@
+apiVersion: replicaset.my.domain/v1alpha1
+kind: AnotherReplicaSet
+metadata:
+  name: example-another-replicaset
+  namespace: default
+  labels:
+    app: test
+spec:
+replicas: 2
+selector:
+  matchLabels:
+    app: test
+template:
+  metadata:
+    labels:
+      app: test
+  spec:
+    containers:
+    - image: busybox
+      command:
+        - sleep
+        - "3600"
+      imagePullPolicy: IfNotPresent
+      name: busybox
