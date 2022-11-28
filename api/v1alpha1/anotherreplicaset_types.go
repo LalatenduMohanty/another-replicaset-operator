@@ -16,6 +16,8 @@ limitations under the License.
 
 package v1alpha1
 
+// package v1alpha2
+
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -32,6 +34,7 @@ type AnotherReplicaSetSpec struct {
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Minimum=1
 	Replicas int32 `json:"replicas"`
+	//Container
 }
 
 // AnotherReplicaSetStatus defines the observed state of AnotherReplicaSet
