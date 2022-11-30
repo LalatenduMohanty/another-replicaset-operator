@@ -19,21 +19,25 @@ package controllers
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"k8s.io/apimachinery/pkg/api/errors"
+	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
+	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 
 	replicasetv1alpha1 "github.com/LalatenduMohanty/another-replicaset-operator/api/v1alpha1"
+	corev1 "k8s.io/api/core/v1"
 )
 
 var log = logf.Log.WithName("another_replica_set")
 
 // AnotherReplicaSetReconciler reconciles a AnotherReplicaSet object
 type AnotherReplicaSetReconciler struct {
-	client.Client
+	Client client.Client
 	Scheme *runtime.Scheme
 }
 
@@ -72,25 +76,41 @@ func (r *AnotherReplicaSetReconciler) Reconcile(ctx context.Context, req ctrl.Re
 	//return ctrl.Result{}, nil
 
 	// check the value of Replicas in AnotherReplicaSetSpec of the in-cluser resource
-	// get actual pod count from the incluster custom resource
+	// get actual pod count from the in-cluster custom resource
 	replicas := instance.Spec.Replicas
 	reqLogger.Info(fmt.Sprintf("Replica count in the custom resource: %d", replicas))
 
 	//Get actual number of pods
-	reqLogger.Info(fmt.Sprintf("Trying to get the actual pod count"))
-	podList := &replicasetv1alpha1.AnotherReplicaSetList{}
-	err = r.Client.List(ctx, podList)
-	if err != nil {
-		reqLogger.Info("Error reading the object for pod list, requeuing")
-		return ctrl.Result{}, err
-	}
+	reqLogger.Info(fmt.Sprintf("Trying to get the actual in cluster pod count"))
 
-	podCount := 0
-	for i, _ := range podList.Items {
-		podCount = i
+	inClusterPodList := &corev1.PodList{}
+	labelSelector := labels.SelectorFromSet(labelsForApp(instance.Name))
+	listOps := &client.ListOptions{Namespace: instance.Namespace, LabelSelector: labelSelector}
+	err = r.Client.List(context.TODO(), inClusterPodList, listOps)
+	if err != nil {
+		reqLogger.Error(err, "failed to list pods", "Namespace",
+			instance.Namespace, "Name", instance.Name)
+		return reconcile.Result{}, err
 	}
-	reqLogger.Info(fmt.Sprintf("In-cluster POD count : %d", podCount))
-	return ctrl.Result{}, nil
+	podNames := getPodNames(inClusterPodList.Items)
+	reqLogger.Info("got pod names", "podNames", podNames)
+
+	//return ctrl.Result{}, nil
+	return reconcile.Result{RequeueAfter: time.Second * 10}, nil
+}
+
+func getPodNames(pods []corev1.Pod) []string {
+	var podNames []string
+	for _, pod := range pods {
+		podNames = append(podNames, pod.Name)
+	}
+	return podNames
+}
+
+// labelsForApp returns the labels for selecting the resources
+// belonging to the given AppService CR name.
+func labelsForApp(name string) map[string]string {
+	return map[string]string{"app": "test"}
 }
 
 // SetupWithManager sets up the controller with the Manager.
